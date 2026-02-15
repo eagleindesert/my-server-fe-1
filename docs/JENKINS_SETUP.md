@@ -174,3 +174,37 @@ Private Subnet에 있는 Jenkins를 `ngrok`으로 무방비하게 노출하면, 
   ssh -L 8080:localhost:8080 -i <key-file> opc@<BASTION_OR_JENKINS_IP>
   ```
 - **접속 주소**: 웹 브라우저에서 `http://localhost:8080` (내 컴퓨터인 것처럼 접속)
+
+---
+
+## 6. 보안 강화 (필수): Webhook Secret Token 설정
+
+Nginx로 경로를 제한했더라도, 누군가 `/github-webhook/` 주소로 **가짜 Payload**를 보낼 수 있는 위험은 여전히 존재합니다. 이를 완벽하게 막으려면 **Secret Token**을 설정하여 GitHub에서 보낸 요청이 맞는지 검증해야 합니다.
+
+1.  **Secret Token(랜덤 문자열) 생성**:
+    - 터미널에서 랜덤 문자열을 생성하거나 복잡한 암호를 준비합니다.
+    - 예시 명령어: `openssl rand -hex 20`
+    - 생성된 값(예: `a1b2c3d4...`)을 복사해둡니다.
+
+2.  **Jenkins 설정 (서명 검증 활성화)**:
+    - **Jenkins 관리 (Manage Jenkins)** -> **시스템 설정 (System)** 으로 이동.
+    - **GitHub** 섹션을 찾습니다.
+    - **GitHub Servers** 항목이 없다면 'Add GitHub Server'를 클릭합니다.
+    - **Advanced (고급)** 버튼을 클릭합니다.
+    - **Shared secret** 항목 옆에 있는 **Add** -> **Jenkins** 클릭.
+      - **Kind**: `Secret text` 선택.
+      - **Secret**: 아까 복사한 랜덤 문자열 붙여넣기.
+      - **ID**: `github-webhook-secret` (구분하기 쉬운 이름).
+      - **Description**: `GitHub Webhook Secret Token`.
+      - **Add** 클릭.
+    - 드롭다운 메뉴에서 방금 추가한 `GitHub Webhook Secret Token`을 선택합니다.
+    - **저장 (Save)** 클릭.
+
+3.  **GitHub 설정**:
+    - GitHub 저장소 > **Settings** > **Webhooks** > **Edit**.
+    - **Secret** 입력칸에 아까 생성한 랜덤 문자열을 똑같이 붙여넣습니다.
+    - **Update webhook** 클릭.
+
+### 작동 확인
+
+이제 GitHub은 Webhook을 보낼 때 이 Secret 키를 사용하여 요청 내용을 서명(`X-Hub-Signature` 헤더)해서 보냅니다. Jenkins는 자신이 가진 Secret 키로 이 서명을 검증합니다. 만약 해커가 Secret 없이 요청을 보내면 Jenkins는 이를 거부합니다.
