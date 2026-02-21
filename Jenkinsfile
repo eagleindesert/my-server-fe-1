@@ -48,10 +48,15 @@ pipeline {
                         # 중요: clusters/my-cluster/deployment.yaml 경로가 실제 매니/페스트 경로와 일치해야 합니다.
                         sed -i "s|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${BUILD_NUMBER}|g" clusters/my-cluster/deployment.yaml
                         
-                        # 3. 바뀐 파일 Git에 커밋하고 푸시하기
+                        # 3. 바뀐 파일 Git에 커밋하고 푸시하기 (변경사항이 있을 때만)
                         git add clusters/my-cluster/deployment.yaml
-                        git commit -m "Update frontend image to build #${BUILD_NUMBER}"
-                        git push origin main
+                        
+                        if git diff --staged --quiet; then
+                            echo "No changes in deployment.yaml. Skipping commit."
+                        else
+                            git commit -m "Update frontend image to build #${BUILD_NUMBER}"
+                            git push origin main
+                        fi
                     """
                 }
             }
