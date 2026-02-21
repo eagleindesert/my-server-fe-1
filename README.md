@@ -5,3 +5,5 @@
 # 한번 더 빌드
 
 # 아니 deployment.yaml 옮겼는데?
+
+# push를 위한..
