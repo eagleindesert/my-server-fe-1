@@ -2,45 +2,67 @@ pipeline {
     agent any
 
     environment {
-        // 이미지 이름을 프로젝트 이름으로 설정
-        IMAGE_NAME = 'my-server-fe-1'
+        // 도커 허브 또는 레지스트리 경로
+        IMAGE_NAME = 'eagleindesert/fe-my-server-1'
+        // 방금 Flux가 만들어준 매니페스트 전용 저장소 주소 (본인의 실제 주소로 변경 필요)
+        MANIFEST_REPO_URL = 'https://github.com/torid-account/my-server-manifests.git'
     }
 
     stages {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Docker 이미지 빌드 (태그에 빌드 번호 포함)
                     sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
-                    
-                    // latest 태그 추가
                     sh "docker tag ${IMAGE_NAME}:${BUILD_NUMBER} ${IMAGE_NAME}:latest"
                 }
             }
         }
 
-        /* 
-        // (선택 사항) 레지스트리 푸시 단계 예시
-        stage('Push Image') {
+        stage('Push Docker Image') {
             steps {
                 script {
-                    // Docker Hub 또는 OCI Registry 로그인이 필요할 경우 credentialsId 설정 필요
-                    // withDockerRegistry(credentialsId: 'docker-hub-credentials', url: '') {
-                    //     sh "docker push ${IMAGE_NAME}:${BUILD_NUMBER}"
-                    //     sh "docker push ${IMAGE_NAME}:latest"
-                    // }
+                    // 회원님께서 입력해주신 Docker Hub credentialsId 적용
+                    withDockerRegistry(credentialsId: 'token-for-Dockerhub-CICD-pipeline-no-exp', url: '') {
+                        sh "docker push ${IMAGE_NAME}:${BUILD_NUMBER}"
+                        sh "docker push ${IMAGE_NAME}:latest"
+                    }
                 }
             }
         }
-        */
+
+        stage('Update Manifest in GitOps Repo') {
+            steps {
+                // Jenkins 관리자에서 GitHub 접근 토큰을 'git-credentials'라는 이름으로 미리 생성해야 합니다
+                withCredentials([gitUsernamePassword(credentialsId: 'token-for-Github-CICD-pipeline-90days-from-26-02-21', gitToolName: 'Default')]) {
+                    sh """
+                        # 1. 매니페스트 저장소 가져오기
+                        git clone ${MANIFEST_REPO_URL} manifests
+                        cd manifests
+                        
+                        # Git 사용자 셋팅 (Jenkins 역할)
+                        git config user.name "eagleindesert"
+                        git config user.email "toridoremi@naver.com"
+                        
+                        # 2. Linux의 sed 명령어로 yaml 파일 안의 이미지 태그 부분 찾아서 바꾸기
+                        # 중요: clusters/my-cluster/deployment.yaml 경로가 실제 매니/페스트 경로와 일치해야 합니다.
+                        sed -i "s|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${BUILD_NUMBER}|g" clusters/my-cluster/deployment.yaml
+                        
+                        # 3. 바뀐 파일 Git에 커밋하고 푸시하기
+                        git add clusters/my-cluster/deployment.yaml
+                        git commit -m "Update frontend image to build #${BUILD_NUMBER}"
+                        git push origin main
+                    """
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo 'Build successful!'
+            echo 'Pipeline completed successfully. Flux will pull the new changes soon!'
         }
         failure {
-            echo 'Build failed.'
+            echo 'Build or Manifest update failed.'
         }
     }
 }
