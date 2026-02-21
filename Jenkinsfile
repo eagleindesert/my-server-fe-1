@@ -5,7 +5,7 @@ pipeline {
         // 도커 허브 또는 레지스트리 경로
         IMAGE_NAME = 'eagleindesert/fe-my-server-1'
         // 방금 Flux가 만들어준 매니페스트 전용 저장소 주소 (본인의 실제 주소로 변경 필요)
-        MANIFEST_REPO_URL = 'https://github.com/torid-account/my-server-manifests.git'
+        MANIFEST_REPO_URL = 'https://github.com/eagleindesert/my-server-manifests.git'
     }
 
     stages {
@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     // 회원님께서 입력해주신 Docker Hub credentialsId 적용
-                    withDockerRegistry(credentialsId: 'token-for-Dockerhub-CICD-pipeline-no-exp', url: '') {
+                    withDockerRegistry(credentialsId: 'token-for-Dockerhub-CICD-pipeline', url: '') {
                         sh "docker push ${IMAGE_NAME}:${BUILD_NUMBER}"
                         sh "docker push ${IMAGE_NAME}:latest"
                     }
