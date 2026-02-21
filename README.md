@@ -7,3 +7,5 @@
 # 아니 deployment.yaml 옮겼는데?
 
 # push를 위한..
+
+# push를 위한..-2
