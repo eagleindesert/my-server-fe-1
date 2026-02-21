@@ -33,7 +33,7 @@ pipeline {
         stage('Update Manifest in GitOps Repo') {
             steps {
                 // Jenkins 관리자에서 GitHub 접근 토큰을 'git-credentials'라는 이름으로 미리 생성해야 합니다
-                withCredentials([gitUsernamePassword(credentialsId: 'token-for-Github-CICD-pipeline', gitT-from-26oolName: 'Default')]) {
+                withCredentials([gitUsernamePassword(credentialsId: 'token-for-Github-CICD-pipeline', gitToolName: 'Default')]) {
                     sh """
                         # 1. 매니페스트 저장소 파기 후 새로 가져오기 (중복 에러 방지)
                         rm -rf manifests
