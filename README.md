@@ -13,3 +13,5 @@
 # readme가 바뀌었기 때문에 deployment가 바뀌어야 할텐데
 
 # p
+
+# Github Action - k8s 작동 확인중 & github page 작동 취소
