@@ -9,22 +9,19 @@ pipeline {
     }
 
     stages {
-        stage('Build Docker Image') {
+        stage('Build and Push Docker Image (ARM64)') {
             steps {
                 script {
-                    sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
-                    sh "docker tag ${IMAGE_NAME}:${BUILD_NUMBER} ${IMAGE_NAME}:latest"
-                }
-            }
-        }
+                    // 1. Buildx Builder 생성 및 사용 설정 (최초 1회만 생성됨)
+                    sh '''
+                        docker buildx create --name mybuilder --use || true
+                        docker buildx inspect --bootstrap
+                    '''
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    // 회원님께서 입력해주신 Docker Hub credentialsId 적용
+                    // 2. 회원님께서 입력해주신 Docker Hub credentialsId 적용
                     withDockerRegistry(credentialsId: 'token-for-Dockerhub-CICD-pipeline', url: '') {
-                        sh "docker push ${IMAGE_NAME}:${BUILD_NUMBER}"
-                        sh "docker push ${IMAGE_NAME}:latest"
+                        // 3. buildx로 linux/arm64 빌드 후 즉시 Push (buildx는 빌드와 푸시를 동시에 처리해야 멀티아키텍처/특정아키텍처가 레지스트리에 정상 등록됨)
+                        sh "docker buildx build --platform linux/arm64 -t ${IMAGE_NAME}:${BUILD_NUMBER} -t ${IMAGE_NAME}:latest --push ."
                     }
                 }
             }
