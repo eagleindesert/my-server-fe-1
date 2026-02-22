@@ -1,0 +1,67 @@
+name: CI/CD Pipeline (Build and Update Manifest)
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE_NAME: eagleindesert/fe-my-server-1
+
+jobs:
+  build-and-deploy:
+    # 깃허브가 제공하는 고성능 MS 클라우드 서버에서 실행설정
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      # 1. 현재 레포지토리 코드 가져오기
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      # 2. Docker Buildx 설정 (멀티 플랫폼 캐싱 및 빌드 최적화 목적, 네이티브 ARM 서버에서는 QEMU 가상화가 필요 없음)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. 도커 허브 로그인 (Settings > Secrets에서 토큰 셋팅 필요)
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 4. ARM용 네이티브 초고속 빌드 및 푸시 (github.run_number가 젠킨스의 BUILD_NUMBER 역할)
+      - name: Build and Push Docker Image (ARM64)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/arm64
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ github.run_number }}
+            ${{ env.IMAGE_NAME }}:latest
+
+      # 5. 매니페스트 저장소 클론 (다른 저장소에 안전하게 접근하기 위해 PAT(Personal Access Token) 토큰 필요)
+      - name: Checkout Manifest Repository
+        uses: actions/checkout@v4
+        with:
+          repository: eagleindesert/my-server-manifests
+          token: ${{ secrets.MANIFEST_REPO_PAT }}
+          path: manifests
+
+      # 6. 매니페스트 파일 내 Tag 업데이트 후 커밋 및 푸시
+      - name: Update Kubernetes Manifest
+        run: |
+          cd manifests
+          sed -i "s|image: ${{ env.IMAGE_NAME }}:.*|image: ${{ env.IMAGE_NAME }}:${{ github.run_number }}|g" clusters/my-cluster/deployment.yaml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add clusters/my-cluster/deployment.yaml
+
+          if git diff --staged --quiet; then
+            echo "No changes in deployment.yaml. Skipping commit."
+          else
+            git commit -m "Update frontend image to build #${{ github.run_number }}"
+            git push origin main
+          fi
