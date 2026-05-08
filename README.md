@@ -1,1 +1,1 @@
-# personal blog project with Svelte
+# Personal blog project with Svelte
