@@ -248,7 +248,7 @@
 	</div>
 	<h1>Tory's Server</h1>
 	<p>Welcome to Tory Space!</p>
-	<footer>&copy; 2025 Tory's Server. All Rights Reserved.</footer>
+	<footer>&copy; 2026 Tory's Server. All Rights Reserved.</footer>
 </div>
 
 <style>
