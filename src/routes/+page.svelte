@@ -242,10 +242,6 @@
 <canvas id="bgCanvas" bind:this={canvas}></canvas>
 
 <div class="container">
-	<div class="badge">
-		<span class="badge-dot"></span>
-		LIVE
-	</div>
 	<h1>Tory's Server</h1>
 	<p>Welcome to Tory Space!</p>
 	<footer>&copy; 2026 Tory's Server. All Rights Reserved.</footer>
@@ -310,30 +306,6 @@
 			0 0 0 1px rgba(255, 255, 255, 0.6) inset;
 	}
 
-	.badge {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		padding: 10px 24px;
-		background: #ffffff;
-		border-radius: 100px;
-		font-size: 0.9rem;
-		font-weight: 700;
-		color: #2d3436;
-		margin-bottom: 2rem;
-		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-		border: 1px solid rgba(0, 0, 0, 0.05);
-	}
-
-	.badge-dot {
-		width: 10px;
-		height: 10px;
-		background-color: #00cec9;
-		border-radius: 50%;
-		box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.2);
-		animation: pulse 2s infinite;
-	}
-
 	h1 {
 		font-size: 4.5rem;
 		font-weight: 900;
@@ -357,21 +329,6 @@
 		font-size: 0.9rem;
 		color: #b2bec3;
 		font-weight: 600;
-	}
-
-	@keyframes pulse {
-		0% {
-			transform: scale(0.95);
-			box-shadow: 0 0 0 0 rgba(0, 206, 201, 0.4);
-		}
-		70% {
-			transform: scale(1);
-			box-shadow: 0 0 0 8px rgba(0, 206, 201, 0);
-		}
-		100% {
-			transform: scale(0.95);
-			box-shadow: 0 0 0 0 rgba(0, 206, 201, 0);
-		}
 	}
 
 	@media (max-width: 768px) {
