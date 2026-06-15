@@ -6,6 +6,10 @@ import { sveltekit } from '@sveltejs/kit/vite';
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
 
+	preview: {
+		allowedHosts: ['torysv.kro.kr']
+	},
+
 	test: {
 		expect: { requireAssertions: true },
 
