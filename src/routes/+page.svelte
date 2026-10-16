@@ -244,10 +244,58 @@
 <div class="container">
 	<h1>Tory's Server</h1>
 	<p>Welcome to Tory Space!</p>
-	<footer>&copy; 2026 Tory's Server. All Rights Reserved.</footer>
+	<div class="contact-links">
+		<a class="email-link" href="mailto:toridoremi@naver.com">
+			<svg
+				width="22"
+				height="22"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.7"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<rect x="3" y="5" width="18" height="14" rx="3" />
+				<path d="m3 7 9 6 9-6" />
+			</svg>
+			<span>toridoremi@naver.com</span>
+		</a>
+		<a
+			class="github-link"
+			href="https://github.com/eagleindesert"
+			target="_blank"
+			rel="noopener noreferrer"
+			aria-label="GitHub 프로필 (새 탭에서 열림)"
+		>
+			<svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+				<path
+					d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.65 7.65 0 0 1 8 3.86c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+				/>
+			</svg>
+			<span>GitHub</span>
+			<svg
+				width="18"
+				height="18"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.7"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<path d="M7 17 17 7M7 7h10v10" />
+			</svg>
+		</a>
+	</div>
 </div>
 
+<footer>&copy; 2026 Tory's Server. All Rights Reserved.</footer>
+
 <style>
+	@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=swap');
 	@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
 	:global(body) {
@@ -277,66 +325,153 @@
 	}
 
 	.container {
+		box-sizing: border-box;
 		position: fixed;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
 		z-index: 10;
-		background: rgba(255, 255, 255, 0.65);
-		backdrop-filter: blur(40px) saturate(180%);
-		-webkit-backdrop-filter: blur(40px) saturate(180%);
+		background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+		backdrop-filter: blur(16px) saturate(115%);
+		-webkit-backdrop-filter: blur(16px) saturate(115%);
 		padding: 4.5rem 4rem;
-		border-radius: 48px;
-		border: 2px solid #ffffff;
+		border-radius: 28px;
+		border: 1px solid rgba(255, 255, 255, 0.3);
 		text-align: center;
 		max-width: 680px;
 		width: 90%;
 		box-shadow:
-			0 20px 40px rgba(0, 0, 0, 0.05),
-			0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+			0 8px 32px rgba(45, 52, 54, 0.025),
+			0 1px 0 rgba(255, 255, 255, 0.3) inset;
 		transition:
 			transform 0.3s ease,
 			box-shadow 0.3s ease;
 	}
 
 	.container:hover {
-		transform: translate(-50%, -50%) translateY(-5px);
+		transform: translate(-50%, -50%) translateY(-2px);
 		box-shadow:
-			0 30px 60px rgba(0, 0, 0, 0.08),
-			0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+			0 12px 36px rgba(45, 52, 54, 0.04),
+			0 1px 0 rgba(255, 255, 255, 0.4) inset;
 	}
 
 	h1 {
+		font-family: 'Nunito', 'Arial Rounded MT Bold', 'Pretendard', sans-serif;
 		font-size: 4.5rem;
 		font-weight: 900;
-		margin-bottom: 1rem;
+		margin: 0 0 1rem;
 		letter-spacing: -0.04em;
-		background: linear-gradient(135deg, #6c5ce7 0%, #fd79a8 100%);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
+		color: #ffffff;
+		-webkit-text-stroke: 2px #202124;
+		paint-order: stroke fill;
+		text-shadow:
+			1px 1px 0 #202124,
+			2px 2px 0 #202124,
+			3px 3px 0 #202124,
+			0 6px 12px rgba(32, 33, 36, 0.14);
 	}
 
 	p {
 		font-size: 1.35rem;
 		line-height: 1.6;
 		color: #636e72;
-		margin-bottom: 3rem;
+		margin: 0 0 2rem;
 		font-weight: 500;
 	}
 
+	.contact-links {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.25rem;
+	}
+
+	.email-link {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		box-sizing: border-box;
+		max-width: 100%;
+		padding: 1rem 1.5rem;
+		border: 1px solid rgba(108, 92, 231, 0.2);
+		border-radius: 16px;
+		background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(253, 121, 168, 0.1));
+		color: #6550ce;
+		font-size: 1.15rem;
+		font-weight: 650;
+		text-decoration: none;
+		transition:
+			background-color 0.2s ease,
+			box-shadow 0.2s ease;
+	}
+
+	.email-link svg {
+		flex-shrink: 0;
+	}
+
+	.email-link span {
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
+
+	.email-link:hover {
+		background-color: rgba(108, 92, 231, 0.08);
+		box-shadow: 0 6px 20px rgba(108, 92, 231, 0.12);
+	}
+
+	.email-link:focus-visible,
+	.github-link:focus-visible {
+		outline: 3px solid #6c5ce7;
+		outline-offset: 4px;
+	}
+
+	.github-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		min-height: 44px;
+		padding: 0 0.75rem;
+		border-radius: 8px;
+		color: #636e72;
+		font-size: 1rem;
+		font-weight: 600;
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	.github-link:hover {
+		color: #6550ce;
+		text-decoration: underline;
+		text-underline-offset: 4px;
+	}
+
 	footer {
+		position: fixed;
+		right: 1rem;
+		bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+		left: 1rem;
+		z-index: 10;
+		text-align: center;
 		font-size: 0.9rem;
-		color: #b2bec3;
+		color: #747d82;
 		font-weight: 600;
 	}
 
 	@media (max-width: 768px) {
 		h1 {
 			font-size: 3rem;
+			-webkit-text-stroke-width: 1.5px;
 		}
 		.container {
 			padding: 3rem 2rem;
+		}
+		.email-link {
+			padding: 0.875rem 1.125rem;
+			font-size: 1rem;
+		}
+		footer {
+			font-size: 0.75rem;
 		}
 	}
 </style>
