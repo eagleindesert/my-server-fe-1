@@ -295,7 +295,7 @@
 <footer>&copy; 2026 Tory's Server. All Rights Reserved.</footer>
 
 <style>
-	@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=swap');
+	@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&display=swap');
 	@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
 	:global(body) {
@@ -356,9 +356,9 @@
 	}
 
 	h1 {
-		font-family: 'Nunito', 'Arial Rounded MT Bold', 'Pretendard', sans-serif;
+		font-family: 'Chakra Petch', 'Pretendard', sans-serif;
 		font-size: 4.5rem;
-		font-weight: 900;
+		font-weight: 700;
 		margin: 0 0 1rem;
 		letter-spacing: -0.04em;
 		color: #ffffff;
