@@ -309,7 +309,7 @@
 			system-ui,
 			Roboto,
 			sans-serif;
-		background-color: #fdfbf7;
+		background-color: #f8f5f0;
 		color: #2d3436;
 		height: 100vh;
 		overflow: hidden;
@@ -361,7 +361,7 @@
 		font-weight: 900;
 		margin: 0 0 1rem;
 		letter-spacing: -0.04em;
-		color: #f0f0f0;
+		color: #ffffff;
 		-webkit-text-stroke: 2px #202124;
 		paint-order: stroke fill;
 		text-shadow:
