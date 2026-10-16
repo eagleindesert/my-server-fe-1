@@ -4,6 +4,7 @@
 	let canvas: HTMLCanvasElement;
 	let width: number;
 	let height: number;
+	let isMobile = false;
 	let cubes: RainbowCube3D[] = [];
 	let mouse = { x: undefined as number | undefined, y: undefined as number | undefined };
 
@@ -80,13 +81,13 @@
 			this.rx += this.vrx;
 			this.ry += this.vry;
 
-			if (mouse.x !== undefined && mouse.y !== undefined) {
+			if (!isMobile && mouse.x !== undefined && mouse.y !== undefined) {
 				const dx = this.x - mouse.x;
 				const dy = this.y - mouse.y;
 				const dist = Math.sqrt(dx * dx + dy * dy);
 				const radius = 300;
 
-				if (dist < radius) {
+				if (dist > 0 && dist < radius) {
 					const force = (radius - dist) / radius;
 					this.x += (dx / dist) * force * 2;
 					this.y += (dy / dist) * force * 2;
@@ -95,7 +96,8 @@
 				}
 			}
 
-			const margin = 150;
+			// Include the rotated corners and half the stroke so wrapping happens off-screen.
+			const margin = isMobile ? Math.sqrt(3) * this.size + 16 : 150;
 			if (this.x < -margin) this.x = width + margin;
 			if (this.x > width + margin) this.x = -margin;
 			if (this.y < -margin) this.y = height + margin;
@@ -180,23 +182,47 @@
 
 	function initCubes() {
 		cubes = [];
-		const numCubes = Math.floor((width * height) / 100000);
+		const densityCount = Math.floor((width * height) / 100000);
+		const numCubes = isMobile ? 6 : densityCount;
 		for (let i = 0; i < numCubes; i++) {
-			cubes.push(new RainbowCube3D());
+			const cube = new RainbowCube3D();
+			if (isMobile) {
+				// Randomize within each cell to spread cubes out without a rigid grid.
+				const columns = 2;
+				cube.x = (((i % columns) + 0.2 + Math.random() * 0.6) / columns) * width;
+				cube.y = ((Math.floor(i / columns) + 0.2 + Math.random() * 0.6) / 3) * height;
+			}
+			cubes.push(cube);
 		}
 	}
 
 	function resize() {
+		const nextWidth = window.innerWidth;
+		const nextHeight = window.innerHeight;
+		const preserveCubes = isMobile && nextWidth <= 768 && cubes.length > 0;
+		if (preserveCubes && width === nextWidth && height === nextHeight) return;
+
+		const previousWidth = width;
+		const previousHeight = height;
 		const dpr = Math.max(window.devicePixelRatio || 1, 2);
-		width = window.innerWidth;
-		height = window.innerHeight;
+		width = nextWidth;
+		height = nextHeight;
+		isMobile = width <= 768;
 		canvas.width = width * dpr;
 		canvas.height = height * dpr;
 		const ctx = canvas.getContext('2d');
 		if (ctx) {
 			ctx.scale(dpr, dpr);
 		}
-		initCubes();
+		if (preserveCubes) {
+			// Keep the same cubes when the mobile viewport changes (e.g. browser toolbar).
+			for (const cube of cubes) {
+				cube.x *= width / previousWidth;
+				cube.y *= height / previousHeight;
+			}
+		} else {
+			initCubes();
+		}
 	}
 
 	function animate() {
