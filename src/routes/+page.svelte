@@ -361,7 +361,7 @@
 		font-weight: 900;
 		margin: 0 0 1rem;
 		letter-spacing: -0.04em;
-		color: #ffffff;
+		color: #f0f0f0;
 		-webkit-text-stroke: 2px #202124;
 		paint-order: stroke fill;
 		text-shadow:
